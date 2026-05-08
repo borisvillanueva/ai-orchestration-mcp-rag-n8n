@@ -1,0 +1,334 @@
+{
+  "name": "03 - MCP Flagship - Client Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "46922325-e44f-45c9-a2fd-188bad1d2ce8",
+      "name": "When chat message received",
+      "webhookId": "40d83609-8508-489c-ac13-3e5f42de0574"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        272
+      ],
+      "id": "cd999be7-8894-4377-9d07-d74db5d37ace",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEETS_LOG_DOCUMENT_ID",
+          "mode": "list",
+          "cachedResultName": "MCP Flagship Tool Logs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEETS_LOG_DOCUMENT_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEETS_LOG_DOCUMENT_ID/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $now }}",
+            "user_query": "={{ $('When chat message received').item.json.chatInput }}",
+            "tool_used": "MCP Client → Tesla Financial RAG Tool",
+            "status": "success",
+            "source": "={{ $json.output.match(/Source:\\s*(.*)/)?.[1] || '' }}",
+            "answer_summary": "={{ $json.output }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_query",
+              "displayName": "user_query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tool_used",
+              "displayName": "tool_used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source",
+              "displayName": "source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "answer_summary",
+              "displayName": "answer_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        560,
+        48
+      ],
+      "id": "95f319d7-b31d-4731-b979-e2f4679390dc",
+      "name": "Interaction Logger",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8f5d7a21-5a8d-4bf1-99b0-8afbb74b61de",
+              "name": "output",
+              "value": "={{ $('AI Orchestration Agent').item.json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        768,
+        48
+      ],
+      "id": "c56a0730-2fbe-4096-bc64-fbafaa20f7b0",
+      "name": "Return AI Answer"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        304,
+        304
+      ],
+      "id": "7304a049-06d3-41e2-9497-ef2e9f11522c",
+      "name": "Conversation Memory"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://YOUR_N8N_CLOUD_DOMAIN/mcp/YOUR_MCP_SERVER_PATH",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        304
+      ],
+      "id": "cc279200-ca23-44dc-88de-a718aa8fcf1d",
+      "name": "MCP Client - Tesla Tools",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YOUR_HEADER_AUTH_CREDENTIAL_ID",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are an AI orchestration assistant connected to an MCP server.\n\nYour job is to understand the user's request, decide whether an MCP tool is needed, call the correct MCP tool, and return a grounded answer.\n\nUse the MCP Client when the user asks about Tesla financial results, quarterly reports, revenue, automotive revenue, deliveries, production, margins, operating income, cash flow, profitability, or quarterly comparisons.\n\nFor Tesla financial questions:\n1. Use the MCP Client.\n2. Do not invent values.\n3. If the retrieved context does not contain enough evidence, say that the source documents do not contain enough evidence to answer confidently.\n4. Include the source file when available.\n\nUse this response format for RAG answers:\n\nAnswer:\n[direct answer]\n\nEvidence:\n[short explanation of what was retrieved]\n\nSource:\n[source file name if available]\n\nConfidence:\n[High, Medium, or Low, with one short reason]"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        48
+      ],
+      "id": "ff7cd151-af0d-41a7-9aed-02f3106e70a0",
+      "name": "AI Orchestration Agent"
+    },
+    {
+      "parameters": {
+        "content": "Purpose:\nUser-facing AI assistant for Tesla financial questions.\n\nFlow:\nChat Trigger → AI Agent → MCP Client → MCP Server Tools → RAG answer → Interaction Logger → Return AI Answer.\n\nDemonstrates:\nMCP client/server architecture, RAG retrieval, tool orchestration, structured responses, and Google Sheets logging.",
+        "height": 272,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -576,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "737289a8-98f5-453b-a4eb-43715ea1e870",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Orchestration Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Orchestration Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Interaction Logger": {
+      "main": [
+        [
+          {
+            "node": "Return AI Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conversation Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Orchestration Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client - Tesla Tools": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Orchestration Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Orchestration Agent": {
+      "main": [
+        [
+          {
+            "node": "Interaction Logger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c4a6bc95-d3a3-45cd-9b99-70ad3e257617",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a22fd1a5508253ad155401c1deb135d8f0ab5bf8236d3cf7b8174ed5c1dbdc37"
+  },
+  "id": "AN4t77t6SF2KvV8u",
+  "tags": [
+    {
+      "updatedAt": "2026-05-07T19:46:50.890Z",
+      "createdAt": "2026-05-07T19:46:50.890Z",
+      "id": "h8wGcG8aeYx2WiUM",
+      "name": "n8n"
+    }
+  ]
+}
