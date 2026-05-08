@@ -59,7 +59,8 @@ This workflow represents the ingestion layer of the system.
 
 ### Pinecone Namespace and Record Count
 
-![Pinecone Namespace and Record Count](screenshots/03-pinecone-namespace-record-count.png)
+![Pinecone Namespace and Record Count](screenshots/03-pinecone-namespace-proof.png
+)
 
 ### Pinecone Expanded Record Metadata
 
