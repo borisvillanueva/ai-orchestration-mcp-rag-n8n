@@ -162,6 +162,81 @@ ai-orchestration-mcp-rag-n8n/
   screenshots/
   docs/
 ```
+## Workflow 2: MCP Server Tools
+
+**File:** `workflows/02-mcp-server-tools.json`
+
+**Purpose:**
+
+This workflow exposes the Tesla financial retrieval layer through an MCP server. It allows an MCP client to call a dedicated Tesla Financial RAG Tool and retrieve grounded answers from Tesla quarterly earnings documents stored in Pinecone.
+
+This workflow represents the tool server layer of the system.
+
+**Flow:**
+
+```text
+MCP Server Trigger
+        ↓
+Tesla Financial RAG Tool
+        ↓
+OpenAI Embeddings
+        ↓
+Pinecone Vector Store Retrieval
+```
+
+**Main Tool:**
+
+`Tesla Financial RAG Tool`
+
+This tool is designed to answer questions about Tesla financial and operational metrics, including revenue, automotive revenue, energy generation and storage, services revenue, gross profit, operating income, operating margin, deliveries, production, cash flow, expenses, profitability, year-over-year changes, and quarterly comparisons.
+
+**RAG Configuration:**
+
+```text
+Pinecone index: n8ntesla
+Pinecone namespace: tesla-financials-v1
+Retrieval mode: retrieve-as-tool
+Top K: 6
+```
+
+**Tool Behavior:**
+
+The tool is instructed to avoid unsupported answers. If the requested metric or period is not clearly present in the retrieved context, the assistant should say that the source documents do not contain enough evidence to answer confidently.
+
+For Tesla financial answers, the tool should return:
+
+```text
+Answer
+Evidence
+Source
+Confidence
+```
+
+### MCP Server Workflow Screenshot
+
+![MCP Server Tools Workflow](screenshots/05-mcp-server-tools-workflow.png)
+
+### Tesla RAG Tool Configuration
+
+![Tesla RAG Tool Configuration](screenshots/06-tesla-rag-tool-configuration.png)
+
+---
+
+## README Placement Note
+
+Add this section after the Workflow 1 section and before the metadata section.
+
+Also rename the current metadata section from:
+
+```markdown
+## Metadata Strategy
+```
+
+to:
+
+```markdown
+## Workflow 1 Metadata Strategy
+```
 
 ## Author
 
