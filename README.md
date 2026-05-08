@@ -63,7 +63,7 @@ This workflow represents the ingestion layer of the system.
 
 ### Pinecone Expanded Record Metadata
 
-![Pinecone Expanded Record Metadata]()
+![Pinecone Expanded Record Metadata](screenshots/04-pinecone-expanded-record-metadata.png)
 
 ## Workflow 1 Metadata Strategy
 
