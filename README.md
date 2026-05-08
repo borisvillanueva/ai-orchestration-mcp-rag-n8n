@@ -8,13 +8,13 @@ The goal is to show how an AI assistant can use a clean multi-workflow architect
 
 This repository is being built in stages.
 
-Current workflow included:
+Current workflows included:
 
 1. `01-drive-to-pinecone-ingestion.json`
+2. `02-mcp-server-tools.json`
 
 Coming next:
 
-2. `02-mcp-server-tools.json`
 3. `03-client-assistant.json`
 
 ## Architecture Overview
@@ -49,7 +49,23 @@ This workflow watches a Google Drive folder for newly uploaded Tesla quarterly e
 
 This workflow represents the ingestion layer of the system.
 
-## Metadata Strategy
+### Workflow Screenshot
+
+![Drive to Pinecone Ingestion Workflow](screenshots/01-drive-to-pinecone-ingestion-workflow.png)
+
+### Metadata Configuration
+
+![Metadata Configuration](screenshots/02-metadata-configuration.png)
+
+### Pinecone Namespace and Record Count
+
+![Pinecone Namespace and Record Count](screenshots/03-pinecone-namespace-record-count.png)
+
+### Pinecone Expanded Record Metadata
+
+![Pinecone Expanded Record Metadata](screenshots/04-pinecone-expanded-record-metadata.png)
+
+## Workflow 1 Metadata Strategy
 
 Each document chunk is tagged with:
 
@@ -79,89 +95,6 @@ fiscal_quarter: Q1
 document_type: earnings_update
 ```
 
-## Technologies Used
-
-```text
-n8n
-Google Drive
-OpenAI Embeddings
-Pinecone Vector Database
-MCP
-RAG
-Google Sheets
-```
-
-## Setup Notes
-
-Before running the workflow, configure your own credentials in n8n:
-
-```text
-Google Drive OAuth2 credential
-OpenAI credential
-Pinecone credential
-Google Drive folder ID
-Pinecone index and namespace
-```
-
-The public workflow JSON uses placeholder values for credentials and folder IDs.
-
-Example placeholders:
-
-```text
-YOUR_GOOGLE_DRIVE_CREDENTIAL_ID
-YOUR_GOOGLE_DRIVE_FOLDER_ID
-YOUR_OPENAI_CREDENTIAL_ID
-YOUR_PINECONE_CREDENTIAL_ID
-```
-
-## Pinecone Configuration
-
-The workflow is configured to use:
-
-```text
-Index: n8ntesla
-Namespace: tesla-financials-v1
-```
-
-These values can be changed after importing the workflow into n8n.
-
-## Why This Project Matters
-
-This project demonstrates several skills relevant to AI automation and n8n workflow engineering:
-
-```text
-Document ingestion pipeline design
-RAG architecture
-Vector database integration
-Metadata extraction
-Credential hygiene
-Workflow modularity
-AI tool orchestration
-Production-style workflow separation
-```
-
-## Next Steps
-
-Planned additions:
-
-```text
-MCP Server workflow exposing the Tesla Financial RAG Tool
-Client Assistant workflow using the MCP Client
-Google Sheets interaction logging
-Screenshots and demo video
-Architecture documentation
-```
-
-## Repository Structure
-
-```text
-ai-orchestration-mcp-rag-n8n/
-  README.md
-  workflows/
-    01-drive-to-pinecone-ingestion.json
-  screenshots/
-  docs/
-```
 ## Workflow 2: MCP Server Tools
 
 **File:** `workflows/02-mcp-server-tools.json`
@@ -220,22 +153,99 @@ Confidence
 
 ![Tesla RAG Tool Configuration](screenshots/06-tesla-rag-tool-configuration.png)
 
----
+## Technologies Used
 
-## README Placement Note
-
-Add this section after the Workflow 1 section and before the metadata section.
-
-Also rename the current metadata section from:
-
-```markdown
-## Metadata Strategy
+```text
+n8n
+MCP
+Google Drive
+OpenAI Embeddings
+Pinecone Vector Database
+RAG
+Google Sheets
 ```
 
-to:
+## Setup Notes
 
-```markdown
-## Workflow 1 Metadata Strategy
+Before running the workflows, configure your own credentials in n8n:
+
+```text
+Google Drive OAuth2 credential
+OpenAI credential
+Pinecone credential
+Header authentication credential for MCP
+Google Drive folder ID
+Pinecone index and namespace
+```
+
+The public workflow JSON files use placeholder values for credentials, folder IDs, and MCP paths.
+
+Example placeholders:
+
+```text
+YOUR_GOOGLE_DRIVE_CREDENTIAL_ID
+YOUR_GOOGLE_DRIVE_FOLDER_ID
+YOUR_OPENAI_CREDENTIAL_ID
+YOUR_PINECONE_CREDENTIAL_ID
+YOUR_HEADER_AUTH_CREDENTIAL_ID
+YOUR_MCP_SERVER_PATH
+YOUR_MCP_SERVER_WEBHOOK_ID
+```
+
+## Pinecone Configuration
+
+The workflows are configured to use:
+
+```text
+Index: n8ntesla
+Namespace: tesla-financials-v1
+```
+
+These values can be changed after importing the workflows into n8n.
+
+## Why This Project Matters
+
+This project demonstrates several skills relevant to AI automation and n8n workflow engineering:
+
+```text
+Document ingestion pipeline design
+RAG architecture
+Vector database integration
+Metadata extraction
+Credential hygiene
+MCP server design
+Workflow modularity
+AI tool orchestration
+Production-style workflow separation
+```
+
+## Next Steps
+
+Planned additions:
+
+```text
+Client Assistant workflow using the MCP Client
+Google Sheets interaction logging
+Screenshots and demo video
+Architecture documentation
+```
+
+## Repository Structure
+
+```text
+ai-orchestration-mcp-rag-n8n/
+  README.md
+  workflows/
+    01-drive-to-pinecone-ingestion.json
+    02-mcp-server-tools.json
+  screenshots/
+    01-drive-to-pinecone-ingestion-workflow.png
+    02-metadata-configuration.png
+    03-pinecone-namespace-record-count.png
+    04-pinecone-expanded-record-metadata.png
+    05-mcp-server-tools-workflow.png
+    06-tesla-rag-tool-configuration.png
+  docs/
 ```
 
 ## Author
