@@ -378,7 +378,6 @@ ai-orchestration-mcp-rag-n8n/
     08-interaction-logger-configuration.png
     09-google-sheets-log-proof.png
     10-client-assistant-response-proof.png
-  docs/
 ```
 
 ## Security and Credential Hygiene
